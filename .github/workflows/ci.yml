@@ -30,11 +30,11 @@ jobs:
       - run: poetry install
       - run: poetry run pytest
 
-      # Create or update Docker container
+      # Create or update Docker container using the repository name
       - name: Set up Docker Container
         run: |
-          docker build -t my-container:latest .
-          docker push my-container:latest
+          docker build --build-arg PYTHON_VERSION=${{ matrix.python-version }} -t ${{ github.repository }}:latest .
+          docker push ${{ github.repository }}:latest
 
       # Save Docker Container to ECS
       - name: Save Docker Container to ECS
