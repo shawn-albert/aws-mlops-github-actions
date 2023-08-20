@@ -1,0 +1,45 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        python-version: [3.9, 3.10, 3.11]
+
+    steps:
+      # Checkout code from the current commit
+      - uses: actions/checkout@v3
+
+      # Install poetry
+      - name: Install poetry
+        run: pipx install poetry
+
+      # Set up Python with poetry and cache dependencies
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'poetry'
+
+      # Install dependencies and run tests
+      - run: poetry install
+      - run: poetry run pytest
+
+      # Create or update Docker container
+      - name: Set up Docker Container
+        run: |
+          docker build -t my-container:latest .
+          docker push my-container:latest
+
+      # Save Docker Container to ECS
+      - name: Save Docker Container to ECS
+        run: |
+          aws ecs register-task-definition --cli-input-json file://task-definition.json
+          aws ecs create-service --cluster my-cluster --service-name my-service --task-definition my-task-definition
+
+      # Add your additional build, test, or deployment steps here
