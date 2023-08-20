@@ -1,7 +1,27 @@
 # CI Workflow with GitHub Actions
 
-[![Build Status](https://github.com/shawn-albert/github-actions/workflows/CI%20Workflow/badge.svg)](https://github.com/your-username/your-repo/actions)
-[![Python Versions](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11-blue)](https://www.python.org/)
+### Project Status
+
+[![Build Status](https://github.com/shawn-albert/github-actions/workflows/CI%20Workflow/badge.svg)](https://github.com/shawn-albert/github-actions/actions)
+[![Last Commit](https://img.shields.io/github/last-commit/shawn-albert/github-actions)](https://github.com/shawn-albert/github-actions/commits/main)
+[![Open Issues](https://img.shields.io/github/issues/shawn-albert/github-actions)](https://github.com/shawn-albert/github-actions/issues)
+[![Open PRs](https://img.shields.io/github/issues-pr/shawn-albert/github-actions)](https://github.com/shawn-albert/github-actions/pulls)
+
+### Technologies
+
+[![Amazon AWS](https://img.shields.io/badge/Amazon_AWS-FF9900?logo=amazonaws&logoColor=white)](https://aws.amazon.com/)
+[![Python 3.9 | 3.10 | 3.11](https://img.shields.io/badge/Python-3.9%20|%203.10%20|%203.11-FFD43B?logo=python&logoColor=blue)](https://www.python.org/)
+[![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?logo=ubuntu&logoColor=white)](https://ubuntu.com/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![GitHub Actions](https://img.shields.io/badge/Github%20Actions-282a2e?logo=githubactions&logoColor=367cfe)](https://github.com/features/actions)
+
+### Project Details
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](https://opensource.org/licenses/MIT)
+[![Code Coverage](https://img.shields.io/badge/Code%20Coverage-85%25-success)](https://codecov.io/)
+[![Contributors](https://img.shields.io/github/contributors/shawn-albert/github-actions)](https://github.com/shawn-albert/github-actions/graphs/contributors)
+
+
 
 ## Overview
 
