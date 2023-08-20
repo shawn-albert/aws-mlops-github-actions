@@ -1,6 +1,6 @@
 # CI Workflow with GitHub Actions
 
-[![Build Status](https://github.com/your-username/your-repo/workflows/CI%20Workflow/badge.svg)](https://github.com/your-username/your-repo/actions)
+[![Build Status](https://github.com/shawn-albert/github-actions/workflows/CI%20Workflow/badge.svg)](https://github.com/your-username/your-repo/actions)
 [![Python Versions](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11-blue)](https://www.python.org/)
 
 ## Overview
