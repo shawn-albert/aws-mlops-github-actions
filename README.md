@@ -21,11 +21,9 @@
 [![Code Coverage](https://img.shields.io/badge/Code%20Coverage-85%25-success)](https://codecov.io/)
 [![Contributors](https://img.shields.io/github/contributors/shawn-albert/github-actions)](https://github.com/shawn-albert/github-actions/graphs/contributors)
 
-
-
 ## Overview
 
-This repository contains a continuous integration (CI) workflow using GitHub Actions. The workflow checks out the code, sets up a Python environment with poetry, runs tests, builds a Docker container, and saves the container to Amazon ECS.
+This repository contains the code and CI/CD workflow for the Project Name. The CI/CD workflow is designed to run tests within a Docker container, manage semantic versioning, and push Docker images to Amazon Elastic Container Registry (ECR).
 
 ## Directory Structure
 
@@ -34,26 +32,86 @@ This repository contains a continuous integration (CI) workflow using GitHub Act
 ├── .github
 │   └── workflows
 │       └── ci.yml
-├── Dockerfile
-├── task-definition.json
+├── node_modules
+│   └── ...
+├── src
+│   └── ...
+├── tests
+│   └── ...
+├── .releaserc.json
+├── package.json
+├── package-lock.json
+├── poetry.lock
 ├── pyproject.toml
 └── README.md
 ```
 
-## Step-by-Step Instructions
+## CI Workflow
 
-1. **Set Up the Repository**: Clone this repository and navigate to the project directory.
-2. **Configure AWS CLI**: Ensure that the AWS CLI is configured on your self-hosted runners with the necessary IAM roles and permissions to interact with ECS.
-3. **Install Poetry**: Ensure that poetry is installed on your self-hosted runners.
-4. **Verify Python Versions**: Ensure that the Python versions (3.9, 3.10, 3.11) are available on your self-hosted runners.
-5. **Build and Test Locally**: Before pushing to the repository, you can build and test the Docker container locally:
+The CI workflow is defined in `.github/workflows/ci.yml`. It consists of two main jobs:
+
+1. **Release Job**: Determines the new version using semantic-release and creates a GitHub release.
+2. **Build Job**: Builds and tests the project within a Docker container, and pushes the Docker image to ECR.
+
+### Key Components
+
+- **Semantic Release**: Automatically determines the next semantic version number, generates a changelog, and creates a GitHub release.
+- **Docker Container**: The build job runs within a Docker container, sourced from an image in ECR.
+- **Amazon ECR**: Docker images are pushed to ECR repositories, with separate repositories for the main and develop branches.
+- **AWS Parameter Store**: Secrets and parameters, including ECR repository names, are retrieved from the AWS Parameter Store.
+
+## Setup Instructions
+
+### Prerequisites
+
+- Node.js (>= 14.0.0)
+- npm (>= 6.0.0)
+- Python (>= 3.9)
+- AWS CLI (configured with appropriate permissions)
+
+### Installing Dependencies
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-username/your-repo.git
+   cd your-repo
    ```
-   docker build -t my-container:latest .
-   docker run my-container:latest
+
+2. **Install Python dependencies using Poetry:**
+   ```bash
+   poetry install
    ```
-6. **Push Changes**: Commit and push your changes to the `main` branch. The GitHub Actions workflow will be triggered automatically.
-7. **Monitor the Workflow**: You can monitor the progress of the workflow in the "Actions" tab of your GitHub repository.
-8. **Verify in ECS**: Verify that the Docker container has been saved and the service has been created in your ECS cluster.
+
+3. **Install Node.js dependencies:**
+   Make sure you have Node.js and npm installed. Then run the following command to install the necessary npm packages, including semantic-release:
+   ```bash
+   npm install
+   ```
+
+4. **Configure AWS CLI:**
+   Ensure that the AWS CLI is configured with the necessary permissions to access the AWS Parameter Store and Secrets Manager.
+
+5. **Set up GitHub Actions:**
+   The CI workflow is defined in `.github/workflows/ci.yml`. Make sure to update any environment variables or secrets as needed.
+
+6. **Configure Semantic Release:**
+   Semantic release is configured using the `.releaserc.json` file. Make sure to review and update the configuration as needed.
+
+7. **Run Tests Locally (Optional):**
+   You can run tests locally using:
+   ```bash
+   poetry run pytest
+   ```
+
+### Running the Workflow
+
+Once the setup is complete, you can push changes to your repository, and the GitHub Actions workflow will automatically run the CI process, including building, testing, and deploying as configured.
+
+### Additional Notes
+
+- Ensure that the AWS Parameter Store and Secrets Manager are properly configured with the necessary parameters and secrets.
+- Review and update the ECR repository names and other configurations in the AWS Parameter Store as needed.
+- Make sure to follow the semantic versioning guidelines when naming branches for automatic versioning.
 
 ## Contributing Authors
 
@@ -62,10 +120,9 @@ This repository contains a continuous integration (CI) workflow using GitHub Act
 
 ## Additional Notes
 
-- Customize the `Dockerfile`, `task-definition.json`, and `pyproject.toml` as needed for your specific project.
-- Add any additional build, test, or deployment steps to the workflow as needed.
-- Replace the badges with the correct URLs for your repository.
-- Add contributing authors as needed.
+- **Semantic Versioning**: The workflow uses semantic-release to manage versions. Commit messages should follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
+- **Docker Container**: The workflow runs the build job within a Docker container. The container image is sourced from ECR and tagged with the semantic version of the repository.
+- **AWS Integration**: The workflow integrates with AWS services, including ECR, Parameter Store, and Secrets Manager. Ensure that the necessary permissions are configured in AWS.
 
 ## License
 
