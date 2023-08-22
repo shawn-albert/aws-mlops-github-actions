@@ -1,0 +1,11 @@
+name: My Composite Workflow
+on:
+    push:
+      branches:
+        - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: ./.github/actions/semantic-release
