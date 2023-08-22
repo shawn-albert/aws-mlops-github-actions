@@ -1,0 +1,33 @@
+name: 'Build and Push Docker Image'
+description: 'Builds the Docker image and pushes it to ECR'
+inputs:
+  aws-region:
+    description: 'AWS Region'
+    required: true
+  ecr-repository-main:
+    description: 'ECR Repository for Main Branch'
+    required: true
+  ecr-repository-develop:
+    description: 'ECR Repository for Develop Branch'
+    required: true
+  tag-name:
+    description: 'Tag Name for Docker Image'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      shell: bash
+
+    - name: Build Docker image
+      run: docker build -t my-image:${{ inputs.tag-name }} .
+      shell: bash
+
+    - name: Push Docker image to ECR
+      run: |
+        aws ecr get-login-password --region ${{ inputs.aws-region }} | docker login --username AWS --password-stdin ${{ inputs.aws-region }}.dkr.ecr.amazonaws.com
+        docker tag my-image:${{ inputs.tag-name }} ${{ inputs.aws-region }}.dkr.ecr.amazonaws.com/${{ github.ref == 'refs/heads/main' ? inputs.ecr-repository-main : inputs.ecr-repository-develop }}:${{ inputs.tag-name }}
+        docker push ${{ inputs.aws-region }}.dkr.ecr.amazonaws.com/${{ github.ref == 'refs/heads/main' ? inputs.ecr-repository-main : inputs.ecr-repository-develop }}:${{ inputs.tag-name }}
+      shell: bash
