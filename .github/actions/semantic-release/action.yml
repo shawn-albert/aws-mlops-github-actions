@@ -9,7 +9,7 @@ runs:
   using: 'composite'
   steps:
     - name: Checkout Source Code and Set Environment Variables
-      uses: ./.github/actions/checkout-and-set-environment-variables
+      uses: ./.github/actions/retrieve-aws-secrets-and-parameters
 
     - name: Setup Node.js
       uses: actions/setup-node@v2
