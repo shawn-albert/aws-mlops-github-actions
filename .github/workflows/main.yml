@@ -5,15 +5,26 @@ on:
         - main
 
 jobs:
-  Source:
+  Checkout-Source-Code:
     runs-on: ubuntu-latest
     steps:
-        - name: Checkout out Repository Code
-          uses: actions/checkout@v3
-        
-  Version:
+      - name: Checkout out Repository Code
+        uses: actions/checkout@v2
+
+      - name: Upload Code to S3
+        run: |
+          tar -cvzf code.tar.gz .
+          aws s3 cp code.tar.gz s3://${{ env.ARTIFACT-BUCKET }}/code.tar.gz
+      
+
+  Semantic-Versioning:
     runs-on: ubuntu-latest
-    needs: Source
+    needs: Checkout-Source-Code
     steps:
-        - name: Set up Dependencies and Versioning
-          uses: ./.github/actions/semantic-release
+      - name: Download Code from S3
+        run: |
+          aws s3 cp s3://${{ env.ARTIFACT-BUCKET }}/code.tar.gz code.tar.gz
+          tar -xvzf code.tar.gz
+
+      - name: Set up Dependencies and Versioning
+        uses: ./.github/actions/semantic-release
