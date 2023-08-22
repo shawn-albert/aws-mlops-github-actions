@@ -1,0 +1,9 @@
+name: 'Semantic Release'
+description: 'Determine the new version and create a GitHub release'
+runs:
+  using: 'composite'
+  steps:
+    - name: Semantic Release
+      run: npx semantic-release
+      env:
+        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
