@@ -10,10 +10,9 @@ authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-botocore = "^1.23.0" # You can specify the version you need
-boto3 = "^1.20.0"    # You can specify the version you need
-awscliv2 = "^2.3.0"  # You can specify the version you need
-moto = "^2.2.8"      # You can specify the version you need
+botocore = "^1.23.0" 
+boto3 = "^1.20.0"    
+moto = "^2.2.8"      
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
