@@ -6,38 +6,38 @@ on:
       - develop
 
 jobs:
-  Checkout-Source-Code:
+  Setup-Python-and-Dependencies:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout out Repository Code
-        uses: actions/checkout@v2
-
-      - name: Upload Code to S3
-        run: python scripts/upload_to_s3.py
-
-  Setup-Python-And-Dependencies:
-    runs-on: ubuntu-latest
-    needs: Checkout-Source-Code
-    steps:
+        uses: actions/checkout@v3
       - name: Set up Python and Install Dependencies
         uses: ./.github/actions/setup-python-and-install-dependencies
         with:
           python-version: '3.11' # Optional, will default to 3.11 if not specified
 
+  Checkout-Source-Code-and-Upload-to-S3:
+    runs-on: ubuntu-latest
+    needs: Setup-Python-and-Dependencies
+    steps:
+      - name: Checkout out Repository Code
+        uses: actions/checkout@v3
+      - name: Upload Code to S3
+        run: poetry run python scripts/upload_to_s3.py
+
   Semantic-Versioning:
     runs-on: ubuntu-latest
-    needs: Setup-Python-And-Dependencies
+    needs: Checkout-Source-Code-and-Upload-to-S3
     steps:
       - name: Download Code from S3
-        run: python scripts/download_from_s3.py
-
+        run: poetry run python scripts/download_from_s3.py
       - name: Set up Dependencies and Versioning
         uses: ./.github/actions/semantic-release
 
   Moto-Testing:
     if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
-    needs: Setup-Python-And-Dependencies
+    needs: Setup-Python-and-Dependencies
     steps:
       - name: Run Moto Tests
         run: poetry run pytest tests/test_aws_scripts.py
