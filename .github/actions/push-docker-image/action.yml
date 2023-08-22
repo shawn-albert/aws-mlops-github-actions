@@ -1,0 +1,10 @@
+name: 'Push Docker Image to ECR'
+description: 'Tag and push the Docker image to the ECR repository'
+runs:
+  using: 'composite'
+  steps:
+    - name: Push Docker image to ECR
+      run: |
+        aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.AWS_REGION }}.dkr.ecr.amazonaws.com
+        docker tag ${{ github.event.repository.name }}-${{ github.event.ref }}:${{ github.event.release.tag_name }} ${{ env.AWS_REGION }}.dkr.ecr.amazonaws.com/${{ env.ECR_REPOSITORY_MAIN if github.event.ref == 'refs/heads/main' else env.ECR_REPOSITORY_DEVELOP }}:${{ github.event.release.tag_name }}
+        docker push ${{ env.AWS_REGION }}.dkr.ecr.amazonaws.com/${{ env.ECR_REPOSITORY_MAIN if github.event.ref == 'refs/heads/main' else env.ECR_REPOSITORY_DEVELOP }}:${{ github.event.release.tag_name }}
