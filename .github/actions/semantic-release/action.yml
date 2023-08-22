@@ -1,4 +1,4 @@
-name: 'Set up Node.js and Semantic Release'
+name: 'Set up Dependencies for Semantic Versioning'
 description: 'Set up Node.js and install dependencies for semantic versioning'
 inputs:
   node-version:
@@ -18,8 +18,10 @@ runs:
 
     - name: Install Node.js Dependencies
       run: npm install
+      shell: bash
 
     - name: Determine Semantic Release Version
       run: npx semantic-release
+      shell: bash
       env:
         GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
