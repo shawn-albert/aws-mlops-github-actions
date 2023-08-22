@@ -8,4 +8,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: ./.github/actions/semantic-release
+        - name: Checkout out Repository Code
+          uses: actions/checkout@v3
+
+        - name: Set up Dependencies for Semantic Versioning
+          uses: ./.github/actions/semantic-release
