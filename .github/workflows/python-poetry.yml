@@ -3,7 +3,6 @@ name: Python Poetry Setup and Semantic Release with Docker
 on:
   push:
     branches:
-      - main
       - develop
 
 jobs:

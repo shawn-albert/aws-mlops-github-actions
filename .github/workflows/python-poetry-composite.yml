@@ -5,7 +5,7 @@ jobs:
       strategy:
         matrix:
           python-version: [3.9, 3.10, 3.11]
-          branch: [main, develop]
+          branch: [ develop]
       container:
         image: ${{ env.AWS_REGION }}.dkr.ecr.amazonaws.com/${{ env.ECR_REPOSITORY_MAIN if github.event.ref == 'refs/heads/main' else env.ECR_REPOSITORY_DEVELOP }}:${{ github.event.release.tag_name }}
         env:
