@@ -1,4 +1,4 @@
-# CI Workflow with GitHub Actions
+# AWS MLOps Workflow with GitHub Actions
 
 ### Project Status
 
