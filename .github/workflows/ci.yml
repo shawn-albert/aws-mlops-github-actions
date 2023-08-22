@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
@@ -50,31 +50,30 @@ jobs:
 
     # Container configuration to run the job within a Docker container
     container:
-      image: ${{ env.AWS_REGION }}.dkr.ecr.amazonaws.com/${{ env['ECR_REPOSITORY_' + matrix.branch] }}:${{ github.event.release.tag_name }}
-      credentials:
-        username: ${{ env.AWS_ACCESS_KEY_ID }}
-        password: ${{ env.AWS_SECRET_ACCESS_KEY }}
-      env:
-        NODE_ENV: development
+        image: ${{ env.AWS_REGION }}.dkr.ecr.amazonaws.com/${{ env.ECR_REPOSITORY_MAIN if github.event.ref == 'refs/heads/main' else env.ECR_REPOSITORY_DEVELOP }}:${{ github.event.release.tag_name }}
+        credentials:
+          username: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        env:
+          NODE_ENV: development
 
-    steps:
-      # Checkout code and setup Python with poetry
-      - uses: actions/checkout@v3
-      - name: Install poetry
-        run: pipx install poetry
-      - uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: 'poetry'
+      steps:
+        # Checkout code and setup Python with poetry
+        - uses: actions/checkout@v2
+        - name: Install poetry
+          run: pipx install poetry
+        - uses: actions/setup-python@v2
+          with:
+            python-version: ${{ matrix.python-version }}
+            cache: 'poetry'
 
-      # Install dependencies and run tests
-      - run: poetry install
-      - run: poetry run pytest
+        # Install dependencies and run tests
+        - run: poetry install
+        - run: poetry run pytest
 
-      # Push the Docker image to the ECR repository
-      - name: Push Docker image to ECR
-        run: |
-          aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.AWS_REGION }}.dkr.ecr.amazonaws.com
-          docker tag ${{ github.event.repository.name }}-${{ matrix.branch }}:${{ github.event.release.tag_name }} ${{ env.AWS_REGION }}.dkr.ecr.amazonaws.com/${{ env['ECR_REPOSITORY_' + matrix.branch] }}:${{ github.event.release.tag_name }}
-          docker push ${{ env.AWS_REGION }}.dkr.ecr.amazonaws.com/${{ env['ECR_REPOSITORY_' + matrix.branch] }}:${{ github.event.release.tag_name }}
-          
+        # Push the Docker image to the ECR repository
+        - name: Push Docker image to ECR
+          run: |
+            aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.AWS_REGION }}.dkr.ecr.amazonaws.com
+            docker tag ${{ github.event.repository.name }}-${{ github.event.ref }}:${{ github.event.release.tag_name }} ${{ env.AWS_REGION }}.dkr.ecr.amazonaws.com/${{ env.ECR_REPOSITORY_MAIN if github.event.ref == 'refs/heads/main' else env.ECR_REPOSITORY_DEVELOP }}:${{ github.event.release.tag_name }}
+            docker push ${{ env.AWS_REGION }}.dkr.ecr.amazonaws.com/${{ env.ECR_REPOSITORY_MAIN if github.event.ref == 'refs/heads/main' else env.ECR_REPOSITORY_DEVELOP }}:${{ github.event.release.tag_name }}
