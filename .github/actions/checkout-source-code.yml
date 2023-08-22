@@ -1,20 +1,7 @@
-name: 'Checkout and Setup'
-description: 'Checkout code, setup Node.js, and install dependencies'
-inputs:
-  node-version:
-    description: 'Node.js version'
-    required: true
-    default: '14'
+name: 'Checkout Source Code'
+description: 'Checkout source code from the repository'
 runs:
   using: 'composite'
   steps:
-    - name: Checkout code
+    - name: Checkout source code
       uses: actions/checkout@v2
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ inputs.node-version }}
-
-    - name: Install dependencies
-      run: npm install

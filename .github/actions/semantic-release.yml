@@ -1,9 +1,25 @@
-name: 'Semantic Release'
-description: 'Determine the new version and create a GitHub release'
+name: 'Set up Node.js and Semantic Release'
+description: 'Set up Node.js and install dependencies for semantic versioning'
+inputs:
+  node-version:
+    description: 'Node.js version'
+    required: true
+    default: '14'
 runs:
   using: 'composite'
   steps:
-    - name: Semantic Release
+    - name: Checkout Source Code and Set Environment Variables
+      uses: ./.github/actions/checkout-and-set-environment-variables
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Install Node.js Dependencies
+      run: npm install
+
+    - name: Determine Semantic Release Version
       run: npx semantic-release
       env:
         GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
