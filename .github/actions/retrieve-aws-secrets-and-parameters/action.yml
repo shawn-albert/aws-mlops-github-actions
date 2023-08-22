@@ -28,3 +28,4 @@ runs:
         echo "SAGEMAKER-PROJECT-NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
         echo "ARTIFACT-BUCKET=$(aws ssm get-parameter --name /path/to/artifact_bucket --query 'Parameter.Value' --output text)" >> $GITHUB_ENV
         echo "SAGEMAKER-PROJECT-ID=$(aws ssm get-parameter --name /path/to/sagemaker_project_id --query 'Parameter.Value' --output text)" >> $GITHUB_ENV
+      shell: bash
