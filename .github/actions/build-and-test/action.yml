@@ -20,7 +20,9 @@ runs:
         cache: 'poetry'
 
     - name: Install dependencies
-      run: poetry install
+      run: |
+        poetry add botocore boto3 awscliv2 sagemaker
+        poetry install
 
     - name: Run tests
       run: poetry run pytest
